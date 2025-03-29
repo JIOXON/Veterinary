@@ -1,11 +1,13 @@
 package app.adapters.users;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import app.adapters.persons.repository.PersonRepository;
 import app.adapters.persons.entity.PersonEntity;
 import app.adapters.users.entity.UserEntity;
 import app.adapters.users.repository.UserRepository;
-import app.domain.models.Person;
 import app.domain.models.User;
 import app.ports.UserPort;
 import lombok.Getter;
@@ -21,59 +23,53 @@ public class UserAdapter implements UserPort{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+    private PersonRepository personRepository;
 
 	@Override
 	public boolean existUserName(String userName) {
-		return userRepository.existsByUserName(userName);
+		return userRepository.existByUserName(userName);
 	}
 
 	@Override
-	public void saveUser(User user) {
-		UserEntity userEntity = userEntityAdapter(user);
-		userRepository.save(userEntity);
-		user.setUserId(userEntity.getUserId());
-	}
+    public boolean existUserId(long userId) {
+        return userRepository.existByUserId(userId);
+    }
 
 	@Override
-	public User findByPersonId(Person person) {
-		PersonEntity personEntity = personAdapter(person);
-		UserEntity userEntity = userRepository.findByPersonId(personEntity);
-		User user = userAdapter(userEntity);
-		return user;
-	}
+    public void saveUser(User user) {
+        PersonEntity personEntity = personRepository.findByDocument(user.getDocument());
+        UserEntity userEntity = new UserEntity(user, personEntity);
+        userRepository.save(userEntity);
+        user.setUserId(userEntity.getUserId());
+    }
+
+	@Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::userAdapter)
+                .collect(Collectors.toList());
+    }
+	
+	@Override
+    public User findByUserName(String userName) {
+        UserEntity userEntity = userRepository.findByUserName(userName);
+        return userAdapter(userEntity);
+    }
 
 	private User userAdapter(UserEntity userEntity) {
-		if (userEntity == null) {
-			return null;
-		}
-		User user = new User();
-		user.setPersonId(userEntity.getPersonId().getPersonId());
-		user.setDocument(userEntity.getPersonId().getDocument());
-		user.setName(userEntity.getPersonId().getName());
-		user.setUserName(userEntity.getUserName());
-		user.setPassword(userEntity.getPassword());
-		user.setRole(userEntity.getPersonId().getRole());
-		user.setUserId(userEntity.getUserId());
-		return user;
-		
-	}
-
-	private UserEntity userEntityAdapter(User user) {
-		PersonEntity personEntity = personAdapter(user);
-		UserEntity userEntity = new UserEntity();
-		userEntity.setPersonId(personEntity);
-		userEntity.setUserName(user.getUserName());
-		userEntity.setPassword(user.getPassword());
-		return userEntity;
-	}
-
-	private PersonEntity personAdapter(Person person) {
-		PersonEntity personEntity = new PersonEntity();
-		personEntity.setPersonId(person.getPersonId());
-		personEntity.setDocument(person.getDocument());
-		personEntity.setName(person.getName());
-		personEntity.setRole(person.getRole());
-		return personEntity;
-	}
-				
+        User user = new User();
+        user.setUserId(userEntity.getUserId());
+        user.setUserName(userEntity.getUserName());
+        user.setPassword(userEntity.getPassword());
+        user.setRole(userEntity.getRole());
+        user.setDocument(userEntity.getPerson().getDocument());
+        user.setName(userEntity.getPerson().getName());
+        user.setAge(userEntity.getPerson().getAge());
+        System.out.println(user.getUserName());
+        System.out.println(user.getPassword());
+        System.out.println(user.getRole());
+        return user;
+    }
 }

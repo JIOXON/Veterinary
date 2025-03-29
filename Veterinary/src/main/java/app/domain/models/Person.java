@@ -13,57 +13,48 @@ public class Person {
     private int age;
     private String role;
     private String name;
-    private Person person;
-    
+
     public long getPersonId() {
-        return personId;
-    }
+		return personId;
+	}
 
-    public long getDocument() {
-        return document;
-    }
+	public void setPersonId(long personId) {
+		this.personId = personId;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public long getDocument() {
+		return document;
+	}
 
-    public String getRole() {
-        return role;
-    }
+	public void setDocument(long document) {
+		this.document = document;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public Person getPerson() {
-        return person;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public void setPersonId(long personId) {
-        this.personId = personId;
-    }
+	public String getRole() {
+		return role;
+	}
 
-    public void setDocument(long document) {
-        this.document = document;
-    }
+	public void setRole(String role) {
+		this.role = role;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Person() {
+	public Person() {
     }
     
 }

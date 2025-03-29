@@ -1,9 +1,14 @@
 package app.ports;
 
 import app.domain.models.Pet;
-import app.domain.models.Person;
+import java.util.List;
 
 public interface PetPort {
-	public Pet findByPetId(Person personId);
-	public void savePet(Pet pet);
+	public Pet createPet(Pet pet);
+	public Pet updatePet(Pet pet);
+	public void deletePet(Long idPet);
+	public Pet findPetByIdPet(Long idPet);
+	public boolean existPetByIdPet(Long idPet);
+	public List<Pet> findByOwnerId(long ownerId);
+	public long countByOwnerId(long ownerId);
 }

@@ -1,10 +1,12 @@
 package app.ports;
 
-import app.domain.models.Person;
+import java.util.List;
 import app.domain.models.User;
 
 public interface UserPort {
     public boolean existUserName(String userName);
+    public boolean existUserId(long userId);
     public void saveUser(User user);
-    public User findByPersonId(Person person);
+    public User findByUserName(String userName);
+    public List<User> findAllUsers();
 }

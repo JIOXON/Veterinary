@@ -16,18 +16,18 @@ public class PersonEntity {
 		this.document = person.getDocument();
 		this.name = person.getName();
 		this.age = person.getAge();
-		this.role = person.getRole();
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name ="id")
 	private long personId;
+	
 	@Column(name = "document")
     private long document;
+	
 	@Column(name ="age")
     private int age;
-	@Column(name = "role")
-    private String role;
+	
     @Column(name = "name")
     private String name;
     
@@ -41,10 +41,6 @@ public class PersonEntity {
 
     public int getAge() {
         return age;
-    }
-
-    public String getRole() {
-        return role;
     }
 
     public String getName() {
@@ -63,9 +59,6 @@ public class PersonEntity {
         this.age = age;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public void setName(String name) {
         this.name = name;
