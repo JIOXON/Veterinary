@@ -1,7 +1,6 @@
 package app.domain.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import app.domain.models.ClinicalHistory;
 import app.domain.models.*;
 import app.ports.*;
 import java.sql.Date;
@@ -14,7 +13,7 @@ public class SellerService {
 	@Autowired
 	private OrderPort orderPort;
 	@Autowired
-	private ClinicalHistoryPort clinicalHistory;
+	private ClinicalHistoryPort clinicalHistoryPort;
 	@Autowired
 	private ProductPort productPort;
 	
@@ -38,13 +37,13 @@ public class SellerService {
         //Vender
         productPort.sellProduct(medicine);
 
-        // Registrar la venta en la historia clínica
+        //Registrar la venta para la historia clinica
         Order order = orderPort.findById(orderId);
-        ClinicalHistoryPort clinical = new ClinicalHistoryPort();
-        clinical.setIdPet(order.getIdPet());
-        clinical.setDetails("Medicamento vendido: " + medicine.getProductName());
-        clinicalHistory.saveClinicalHistoryId(clinicalHistory);
-
+        ClinicalHistory history = new ClinicalHistory();
+        history.setPetId(order.getPetId());
+        history.setDetails("Medicamento vendido: " + medicine.getProductName());
+        clinicalHistoryPort.saveClinicalHistory(history);
+        
         //Factura
         generateInvoice(order, medicine);
     }
@@ -57,7 +56,7 @@ public class SellerService {
 			invoice.setPetId(invoice.getPetId());
 			invoice.setPetOwnerId(invoice.getPetOwnerId());
 		}
-		invoice.setDate_Invoice(new Date(System.currentTimeMillis())); //Ejemplo de salida: 2025-03-28 (formato YYYY-MM-DD).
+		invoice.setDate_Invoice(new Date(System.currentTimeMillis())); //Ejemplo salida: 2025-03-28 (formato YYYY-MM-DD).
 		invoice.setTotal_Cost(product.getPrice());
 		invoicePort.saveInvoice(invoice);
 	}

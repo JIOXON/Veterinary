@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface OrderPort {
 	public void saveOrder(Order order);
-	public void cancelOrder(long OrderId);
-	public Order findById(Order OrderId);
-	public boolean existOrder(long OrderId);
+	public void cancelOrder(long orderId);
+	public Order findById(long orderId);
+	public boolean existOrder(long orderId);
 	public List<Order> getAllorders();
 	public List<Order> findAllOrders();
 }

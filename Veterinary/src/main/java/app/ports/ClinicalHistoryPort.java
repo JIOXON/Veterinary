@@ -5,7 +5,7 @@ import app.domain.models.ClinicalHistory;
 
 public interface ClinicalHistoryPort {
 	public boolean existClinicalHistoryId(long HistoryId);
-	public void saveClinicalHistoryId(ClinicalHistory clinicalHistory);
+	public void saveClinicalHistory(ClinicalHistory clinicalHistory);
 	public ClinicalHistory createClinicalHistory(ClinicalHistory clinicalHistory);
 	public List<ClinicalHistory> findClinicalHistoryByPetId(long petId);
 }

@@ -7,10 +7,10 @@ public class Order{
 	private long orderId;
 	private String medicine;
 	private Date orderGeneration;
-	private Pet pet;
+	private Pet petId;
 	private Person Veterinarian;
 	private Person PetOwnerId;
-	
+
 	public long getOrderId() {
 		return orderId;
 	}
@@ -35,12 +35,12 @@ public class Order{
 		this.orderGeneration = orderGeneration;
 	}
 
-	public Pet getPet() {
-		return pet;
+	public Pet getPetId() {
+		return petId;
 	}
 
-	public void setPet(Pet pet) {
-		this.pet = pet;
+	public void setPetId(Pet petId) {
+		this.petId = petId;
 	}
 
 	public Person getVeterinarian() {

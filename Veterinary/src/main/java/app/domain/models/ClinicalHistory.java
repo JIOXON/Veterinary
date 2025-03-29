@@ -1,21 +1,34 @@
 package app.domain.models;
 
-public class ClinicalHistory extends Pet{
-	private long HistoryId;
-	private String Datails;
+public class ClinicalHistory {
+	private long historyId;
+	private Pet petId;
+	private String details;
 	
 	public long getHistoryId() {
-		return HistoryId;
+		return historyId;
 	}
+
 	public void setHistoryId(long historyId) {
-		HistoryId = historyId;
+		this.historyId = historyId;
 	}
-	public String getDatails() {
-		return Datails;
+
+	public Pet getPetId() {
+		return petId;
 	}
-	public void setDatails(String datails) {
-		Datails = datails;
+
+	public void setPetId(Pet petId) {
+		this.petId = petId;
 	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
 	public ClinicalHistory() {
 	}
 	
