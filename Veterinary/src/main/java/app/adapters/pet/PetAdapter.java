@@ -5,8 +5,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import app.adapters.persons.entity.PersonEntity;
+import app.adapters.persons.repository.PersonRepository;
 import app.adapters.pet.entity.PetEntity;
 import app.adapters.pet.repository.PetRepository;
+import app.adapters.petOwner.entity.PetOwnerEntity;
+import app.adapters.petOwner.repository.PetOwnerRepository;
 import app.domain.models.*;
 
 import app.ports.PetPort;
@@ -16,10 +19,16 @@ public class PetAdapter implements PetPort{
 	
 	@Autowired
     private PetRepository petRepository;
+	@Autowired
+	private PetOwnerRepository petOwnerRepository;
+	@Autowired
+	private PersonRepository personRepository;
 
     @Override
     public Pet createPet(Pet pet) {
-        PetEntity petEntity = new PetEntity();
+    	PersonEntity person = personRepository.findByDocument(pet.getOwnerId());
+		PetOwnerEntity petOwner = petOwnerRepository.findByPerson(person);
+	    PetEntity petEntity = new PetEntity(pet, petOwner);
         petRepository.save(petEntity);
         return petAdapter(petEntity);
     }
@@ -73,7 +82,9 @@ public class PetAdapter implements PetPort{
 
 	@Override
 	public void savePet(Pet pet) {
-	    PetEntity petEntity = new PetEntity(pet);
+		PersonEntity person = personRepository.findByDocument(pet.getOwnerId());
+		PetOwnerEntity petOwner = petOwnerRepository.findByPerson(person);
+	    PetEntity petEntity = new PetEntity(pet, petOwner);
 	    petRepository.save(petEntity);
 	    pet.setPetId(petEntity.getPetId());
 	}

@@ -22,10 +22,9 @@ public class AdminInput implements InputPort{
 
 	private final String MENU = "Ingrese la opcion:"
             + " \n 1. Crear Usuario."
-            + " \n 2. Registrar Dueño de mascota y mascota"
-            + " \n 3. Lista de personas registradas"
-            + " \n 4. Lista de Usuarios"
-			+ " \n 5. Salir de la aplicacion";
+            + " \n 2. Lista de personas registradas"
+            + " \n 3. Lista de Usuarios"
+            + " \n 4. Salir de la aplicacion";
 	
 	public void menu() throws Exception {
 	    boolean running = true;
@@ -45,7 +44,7 @@ public class AdminInput implements InputPort{
 	            }
 	            case "2": {
 	                try {
-	                    registerPet();
+	                    listPersons();
 	                } catch (Exception error) {
 	                    System.out.println(error.getMessage());
 	                }
@@ -53,21 +52,13 @@ public class AdminInput implements InputPort{
 	            }
 	            case "3": {
 	                try {
-	                    listPersons();
-	                } catch (Exception error) {
-	                    System.out.println(error.getMessage());
-	                }
-	                break;
-	            }
-	            case "4": {
-	                try {
 	                    listUsers();
 	                } catch (Exception error) {
 	                    System.out.println(error.getMessage());
 	                }
 	                break;
 	            }
-	            case "5": {  // Opción para salir
+	            case "4": {  // Opción para salir
 	                System.out.println("Saliendo del menú de administrador...");
 	                running = false;
 	                break;
@@ -124,62 +115,6 @@ public class AdminInput implements InputPort{
         user.setRole(role);
         user.setPassword(password);
         adminService.registerUser(user);
-    }
-	
-	private void registerPet() {
-        try {
-            // Recolectamos los datos para la mascota
-            System.out.println("Ingrese nombre de la mascota: ");
-            String name = petValidator.nameValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese la edad de la mascota: ");
-            int age = petValidator.ageValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese la raza de la mascota: ");
-            String breed = petValidator.nameValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese características de la mascota: ");
-            String characteristics = petValidator.nameValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese la especie de la mascota: ");
-            String species = petValidator.nameValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese el peso de la mascota: ");
-            int weight = SimpleValidator.intValidator(Utils.getReader().nextLine());
-            
-            // Primero registramos al dueño de la mascota
-            System.out.println("Ingrese nombre del dueño de la mascota: ");
-            String ownerName = ownerValidator.nameValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese la edad del dueño de la mascota: ");
-            int ownerAge = ownerValidator.ageValidator(Utils.getReader().nextLine());
-            
-            System.out.println("Ingrese el documento del dueño de la mascota: ");
-            Long ownerDocument = ownerValidator.documentValidator(Utils.getReader().nextLine());
-
-            PetOwner petOwner = new PetOwner();
-            petOwner.setName(ownerName);
-            petOwner.setAge(ownerAge);
-            petOwner.setDocument(ownerDocument);
-
-            // Registramos al dueño en el servicio
-            adminService.registerPetOwner(petOwner);
-            
-            // Ahora registramos la mascota
-            Pet pet = new Pet();
-            pet.setPetName(name);
-            pet.setBreed(breed);
-            pet.setPetAge(age);
-            pet.setCharacteristics(characteristics);
-            pet.setSpecies(species);
-            pet.setWeight(weight);
-            pet.setOwnerId(ownerDocument); // Asignamos el documento del dueño como ID
-
-            adminService.registerPet(pet);
-            System.out.println("Mascota registrada correctamente.");
-        } catch (Exception error) {
-            System.out.println("Error de Registro: " + error.getMessage());
-        }
     }
 	
 	private void listPersons() {

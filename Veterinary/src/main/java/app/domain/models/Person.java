@@ -40,5 +40,12 @@ public class Person {
 
 	public Person() {
     }
+
+	@Override
+	public String toString() {
+		return "Person [personId=" + personId + ", document=" + document + ", age=" + age + ", name=" + name + "]";
+	}
+	
+	
     
 }

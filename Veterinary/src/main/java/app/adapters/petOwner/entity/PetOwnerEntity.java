@@ -16,10 +16,11 @@ import jakarta.persistence.Table;
 public class PetOwnerEntity {
 	public PetOwnerEntity(PetOwner petOwner,  PersonEntity personEntity) {
         this.ownerId = petOwner.getOwnerId();
+        this.person=personEntity;
     }
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_owner")
+    @Column(name = "owner_id")
     private long ownerId;
 
     @JoinColumn(name="person_id")

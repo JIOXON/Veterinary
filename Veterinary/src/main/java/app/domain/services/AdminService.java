@@ -20,8 +20,6 @@ public class AdminService {
     private UserPort userPort;
     @Autowired
     private PetOwnerPort petOwnerPort;
-    @Autowired
-    private PetPort petPort;
  
     public void registerVeterinarian(User veterinarian)throws Exception{
         if (personPort.existPerson(veterinarian.getDocument())){
@@ -54,19 +52,6 @@ public class AdminService {
         }
         personPort.savePerson(user);
         userPort.saveUser(user);
-    }
-    public void registerPet(Pet pet) throws Exception {
-        if (petPort.existPetByPetId(pet.getPetId())) {
-            throw new Exception("Ya existe una mascota con ese Id");
-        }
-        petPort.savePet(pet);
-    }
-
-    public void registerPetOwner(PetOwner petOwner) throws Exception {
-        if (personPort.existPerson(petOwner.getDocument())) {
-            throw new Exception("Ya existe una persona con ese Documento");
-        }
-        personPort.savePerson(petOwner);
     }
        
     public List<User>ListUsers(){
