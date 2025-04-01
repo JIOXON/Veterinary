@@ -28,9 +28,9 @@ public class InvoiceAdapter implements InvoicePort {
         return invoiceRepository.findAll().stream().map(entity -> {
             Invoice invoice = new Invoice();
             invoice.setInvoiceId(entity.getInvoiceId());
-            invoice.setOrderId(entity.getOrderId() != null ? entity.getOrderId().getOrderId() : null);
-            invoice.setPetId(entity.getPetId() != null ? entity.getPetId().getPetId() : null);
-            invoice.setOwnerId(entity.getOwnerId() != null ? entity.getOwnerId().getOwnerId() : null);
+            invoice.setOrderId(entity.getOrderId() != null ? entity.getOrderId().getOrderId() : 0);
+            invoice.setPetId(entity.getPetId() != null ? entity.getPetId().getPetId() : 0);
+            invoice.setOwnerId(entity.getOwnerId() != null ? entity.getOwnerId().getOwnerId() : 0);
             invoice.setTotal_Cost(entity.getTotal_Cost());
             invoice.setAmount(entity.getAmount());
             invoice.setDate_Invoice(entity.getDate_Invoice());

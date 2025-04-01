@@ -11,19 +11,22 @@ import app.ports.*;
 
 @Service
 public class VeterinarianService {
-	
-	@Autowired
+
+    @Autowired
     private ClinicalHistoryPort clinicalHistoryPort;
 
     @Autowired
     private OrderPort orderPort;
-    
+
     @Autowired
     private PetPort petPort;
-    
+
     @Autowired
     private PersonPort personPort;
-	
+
+    @Autowired
+    private PetOwnerPort petOwnerPort;
+
     public void registerOrder(Order order) throws Exception {
         if (orderPort.existOrder(order.getOrderId())) {
             throw new Exception("Ya existe una orden con el ID especificado");
@@ -31,13 +34,12 @@ public class VeterinarianService {
         orderPort.saveOrder(order);
     }
 
-    
-	public void cancelOrder(long OrderId, long PetId, String reason) throws Exception {
+    public void cancelOrder(long OrderId, long PetId, String reason) throws Exception {
         if (!orderPort.existOrder(OrderId)) {
             throw new Exception("No existe una orden con el ID especificado");
         }
         orderPort.cancelOrder(OrderId);
-        
+
         Pet pet = petPort.findPetByPetId(PetId);
 
         if (pet == null) {
@@ -50,11 +52,12 @@ public class VeterinarianService {
         clinicalHistory.setDetails("Orden médica anulada. Razón: " + reason);
         clinicalHistoryPort.saveClinicalHistory(clinicalHistory);
     }
-	// Consultar la historia clinica de una mascota
+    // Consultar la historia clinica de una mascota
+
     public List<ClinicalHistory> getClinicalHistory(long petId) {
-    	PetEntity entity = new PetEntity();
-    	entity.setPetId(petId);
-    	return clinicalHistoryPort.findClinicalHistoryByPetId(entity);
+        PetEntity entity = new PetEntity();
+        entity.setPetId(petId);
+        return clinicalHistoryPort.findClinicalHistoryByPetId(entity);
 
     }
 
@@ -67,7 +70,6 @@ public class VeterinarianService {
         return orders;
     }
 
-    
     public void saveClinicalHistory(ClinicalHistory clinicalHistory) throws Exception {
         if (clinicalHistory == null) {
             throw new Exception("La historia clínica no puede ser nula.");
@@ -87,21 +89,25 @@ public class VeterinarianService {
         // Guardar la historia clínica
         clinicalHistoryPort.saveClinicalHistory(clinicalHistory);
     }
+
     public void registerPet(Pet pet) throws Exception {
         if (petPort.existPetByPetId(pet.getPetId())) {
             throw new Exception("Ya existe una mascota con ese Id");
         }
+       
         petPort.savePet(pet);
     }
 
     public void registerPetOwner(PetOwner petOwner) throws Exception {
+        System.out.println("realiza con datos service " + petOwner.toString());
         if (personPort.existPerson(petOwner.getDocument())) {
             throw new Exception("Ya existe una persona con ese Documento");
         }
         personPort.savePerson(petOwner);
+        petOwnerPort.savePetOwner(petOwner);
     }
 
-    public VeterinarianService(){
-    	
+    public VeterinarianService() {
+
     }
 }

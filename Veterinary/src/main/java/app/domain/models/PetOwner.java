@@ -14,4 +14,11 @@ public class PetOwner extends Person{
 	public PetOwner() {
 		
 	}
+
+	@Override
+	public String toString() {
+		return "PetOwner [OwnerId=" + OwnerId + super.toString() +"]";
+	}
+	
+	
 }

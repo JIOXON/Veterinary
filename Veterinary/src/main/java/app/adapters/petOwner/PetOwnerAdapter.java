@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import app.adapters.persons.entity.PersonEntity;
 import app.adapters.persons.repository.PersonRepository;
+import app.adapters.pet.entity.PetEntity;
 import app.adapters.petOwner.entity.PetOwnerEntity;
 import app.adapters.petOwner.repository.PetOwnerRepository;
 import app.domain.models.PetOwner;
@@ -26,14 +27,15 @@ public class PetOwnerAdapter implements PetOwnerPort{
 
     @Override
     public PetOwner findByDocument(long id) {
-        PetOwnerEntity petOwnerEntity = petOwnerRepository.findByPersonDocument(id);
-        return adapterPetOwner(petOwnerEntity);
+    	PersonEntity person = personRepository.findByDocument(id);
+		PetOwnerEntity petOwner = petOwnerRepository.findByPerson(person);
+        return adapterPetOwner(petOwner);
     }
 
     @Override
     public void savePetOwner(PetOwner Owner) {
+    	System.out.println("realiza con datos " + Owner.toString());
         PersonEntity personEntity = personRepository.findByDocument(Owner.getDocument());
-        Owner.setOwnerId(personEntity.getPersonId());
         PetOwnerEntity petOwnerEntity = new PetOwnerEntity(Owner, personEntity);
         petOwnerRepository.save(petOwnerEntity);
     }
