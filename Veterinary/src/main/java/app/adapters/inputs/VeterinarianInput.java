@@ -34,7 +34,7 @@ public class VeterinarianInput implements InputPort{
 			+ " \n 2. Registrar Dueño y Mascota"
 	        + " \n 3. Cancelar una orden"
 	        + " \n 4. Consultar ordenes"
-	        + " \n 5. Modificar historia clinica"
+	        + " \n 5. Registrar historia clinica de mascota"
 	        + " \n 6. Consultar historia clinica";
 	
 	public void menu() {
@@ -111,6 +111,12 @@ public class VeterinarianInput implements InputPort{
 	    
 	    System.out.println("Ingrese el ID del veterinario:");
 	    long veterinarianId = Long.parseLong(Utils.getReader().nextLine());
+	    
+	    System.out.println("Ingrese el ID de la mascota:");
+	    long petId = Long.parseLong(Utils.getReader().nextLine());
+	    
+	    System.out.println("Ingrese el ID del dueño:");
+	    long OwnerId = Long.parseLong(Utils.getReader().nextLine());
 
 	    // Obtener la fecha de generación actual
 	    Date orderGeneration = new Date(System.currentTimeMillis());
@@ -121,6 +127,8 @@ public class VeterinarianInput implements InputPort{
 	    order.setMedicine(medicine);
 	    order.setOrderGeneration(orderGeneration);
 	    order.setUserId(veterinarianId); // El ID del veterinario
+	    order.setPetId(petId);
+	    order.setOwnerId(OwnerId);
 
 	    veterinarianService.registerOrder(order);
 	    System.out.println("Orden registrada exitosamente.");
@@ -170,7 +178,7 @@ public class VeterinarianInput implements InputPort{
             clinicalHistory.setDetails(details);
 
             // Guardar la historia clínica en el servicio
-            veterinarianService.saveClinicalHistory(clinicalHistory);
+            veterinarianService.createClinicalHistory(clinicalHistory);
 
             System.out.println("Historia clínica registrada exitosamente.");
         } catch (Exception error) {

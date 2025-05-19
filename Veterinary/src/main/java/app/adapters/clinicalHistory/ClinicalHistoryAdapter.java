@@ -67,7 +67,7 @@ public class ClinicalHistoryAdapter implements ClinicalHistoryPort{
 	private ClinicalHistory History(ClinicalHistoryEntity clinicalHistory) {
 	    ClinicalHistory Entity = new ClinicalHistory();
 	    Entity.setHistoryId(clinicalHistory.getHistoryId());
-	    //Entity.setPetId(clinicalHistory.getPetId());
+	    Entity.setPetId(clinicalHistory.getPetId().getPetId());
 	    Entity.setDetails(clinicalHistory.getDetails());
 	    return Entity;
 	}
@@ -77,7 +77,7 @@ public class ClinicalHistoryAdapter implements ClinicalHistoryPort{
 	public List<ClinicalHistory> findClinicalHistoryByPetId(PetEntity petEntity) {
 		List<ClinicalHistoryEntity> historyEntities = clinicalHistoryRepository.findByPetId(petEntity);
         return historyEntities.stream()
-                .map(this::History)// Convierte la entidad en un modelo usando el metodo History
+                .map(this::History)
                 .collect(Collectors.toList());
 	}
 

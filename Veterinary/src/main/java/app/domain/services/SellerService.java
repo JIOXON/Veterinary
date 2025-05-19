@@ -27,17 +27,15 @@ public class SellerService {
     // Vender Producto y generar factura
     public void sellProduct(Product product, int quantity) throws Exception {
         productPort.sellProduct(product);
-
-        // Multiplicar el precio por la cantidad
         double totalCost = product.getPrice() * quantity;
-
         // Crear la factura al vender un producto
         generateInvoice(null, product, quantity, totalCost);
     }
 
     // Vender medicamento, corroborar si tiene orden y generar factura
     public void sellMedicine(int orderId, Product medicine, int quantity) throws Exception {
-        if (!orderPort.existOrder(orderId)) {
+        
+    	if (!orderPort.existOrder(orderId)) {
             throw new Exception("No existe ninguna orden");
         }
 
@@ -46,12 +44,16 @@ public class SellerService {
 
         // Registrar la venta en la historia clínica
         ClinicalHistory history = new ClinicalHistory();
-        history.setDetails("Medicamento vendido: " + medicine.getProductName());
-        clinicalHistoryPort.saveClinicalHistory(history);
+        String productName = (medicine.getProductName() != null && !medicine.getProductName().isEmpty())
+                ? medicine.getProductName()
+                : "Medicamento sin nombre especificado";
+        history.setDetails("Medicamento vendido: " + productName);
+        
 
         // Multiplicar el precio por la cantidad
         double totalCost = medicine.getPrice() * quantity;
-
+        clinicalHistoryPort.saveClinicalHistory(history);
+        
         // Crear la factura al vender un medicamento
         generateInvoice(order, medicine, quantity, totalCost);
     }
@@ -64,20 +66,13 @@ public class SellerService {
         if (order != null) {
             invoice.setOrderId(order.getOrderId());
             invoice.setPetId(order.getPetId());
-            //invoice.setPetOwnerId(order.getPet().getOwner().getOwnerId()); 
+            invoice.setOwnerId(order.getOwnerId()); 
         }
 
         invoice.setDate_Invoice(new Date(System.currentTimeMillis()));
         invoice.setTotal_Cost(totalCost);
         invoice.setAmount(quantity); 
-
         invoicePort.saveInvoice(invoice);
-    }
-
-
-    // Obtener todas las facturas generadas
-    public List<Invoice> getAllInvoices() {
-        return invoicePort.getAllInvoices();
     }
 
     public SellerService() {

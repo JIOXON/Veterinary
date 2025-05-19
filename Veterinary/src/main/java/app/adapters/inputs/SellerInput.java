@@ -3,11 +3,11 @@ package app.adapters.inputs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import app.adapters.inputs.utils.Utils;
-import app.domain.models.Invoice;
-import app.domain.models.Order;
-import app.domain.models.Product;
+import app.domain.models.*;
 import app.domain.services.SellerService;
 import app.ports.InputPort;
+import app.ports.OrderPort;
+
 import java.util.List;
 
 @Component
@@ -15,11 +15,14 @@ public class SellerInput implements InputPort {
 
     @Autowired
     private SellerService sellerService;
+    
+    @Autowired
+    private OrderPort orderPort;
 
     private final String MENU = "Ingrese la opción:"
             + "\n 1. Vender un producto"
             + "\n 2. Vender un medicamento"
-            + "\n 3. Mostrar todas las facturas";
+            + "\n 3. Consultar ordenes medicas";
 
     public void menu() throws Exception {
 	    boolean running = true;
@@ -47,13 +50,12 @@ public class SellerInput implements InputPort {
 	            }
 	            case "3": {
 	                try {
-	                	showAllInvoices();
+	                	getAllOrders();
 	                } catch (Exception error) {
 	                    System.out.println(error.getMessage());
 	                }
 	                break;
 	            }
-
 	            default: {
 	                System.out.println("Opción no válida, intente de nuevo.");
 	            }
@@ -100,24 +102,8 @@ public class SellerInput implements InputPort {
         sellerService.sellMedicine(orderId, medicine, quantity);
         System.out.println("Medicamento vendido exitosamente. Factura generada.");
     }
-
-    private void showAllInvoices() {
-        List<Invoice> invoices = sellerService.getAllInvoices();
-        if (invoices.isEmpty()) {
-            System.out.println("No hay facturas registradas.");
-        } else {
-            System.out.println("Lista de facturas:");
-            for (Invoice invoice : invoices) {
-
-
-                System.out.println("Factura ID: " + invoice.getInvoiceId()
-                        + ", Orden ID: " + invoice.getOrderId()
-                        + ", Dueño ID: " + invoice.getOwnerId()
-                        + ", Total: $" + invoice.getTotal_Cost()
-                        + ", Cantidad: " + invoice.getAmount()
-                        + ", Fecha: " + invoice.getDate_Invoice());
-            }
-        }
+    
+    public List<Order> getAllOrders() {
+        return orderPort.findAllOrders();
     }
-
 }
