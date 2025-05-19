@@ -16,6 +16,7 @@ import app.domain.models.Pet;
 import app.domain.models.PetOwner;
 import app.domain.services.VeterinarianService;
 import app.ports.InputPort;
+import app.ports.OrderPort;
 
 @Component
 public class VeterinarianInput implements InputPort{
@@ -28,6 +29,9 @@ public class VeterinarianInput implements InputPort{
 	
 	@Autowired
     private ownerValidator ownerValidator;
+	
+	@Autowired
+    private OrderPort orderPort;
 	
 	private final String MENU = "Ingrese la opción:"
 	        + " \n 1. Registrar orden"
@@ -103,9 +107,6 @@ public class VeterinarianInput implements InputPort{
 	}
 	
 	private void registerOrder() throws Exception {
-	    System.out.println("Ingrese el ID de la orden:");
-	    int orderId = Integer.parseInt(Utils.getReader().nextLine());
-	    
 	    System.out.println("Ingrese el nombre del medicamento:");
 	    String medicine = ownerValidator.nameValidator(Utils.getReader().nextLine());
 	    
@@ -115,7 +116,7 @@ public class VeterinarianInput implements InputPort{
 	    System.out.println("Ingrese el ID de la mascota:");
 	    long petId = Long.parseLong(Utils.getReader().nextLine());
 	    
-	    System.out.println("Ingrese el ID del dueño:");
+	    System.out.println("Ingrese la cedula del dueño:");
 	    long OwnerId = Long.parseLong(Utils.getReader().nextLine());
 
 	    // Obtener la fecha de generación actual
@@ -123,7 +124,6 @@ public class VeterinarianInput implements InputPort{
 
 	    // Crear y llenar el objeto Order
 	    Order order = new Order();
-	    order.setOrderId(orderId);
 	    order.setMedicine(medicine);
 	    order.setOrderGeneration(orderGeneration);
 	    order.setUserId(veterinarianId); // El ID del veterinario

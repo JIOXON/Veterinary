@@ -12,10 +12,13 @@ public class SellerService {
 
     @Autowired
     private InvoicePort invoicePort;
+    
     @Autowired
     private OrderPort orderPort;
+    
     @Autowired
     private ClinicalHistoryPort clinicalHistoryPort;
+    
     @Autowired
     private ProductPort productPort;
     

@@ -36,8 +36,8 @@ public class VeterinarianService {
         }
     
         // Verificar si el dueño asociado existe
-        if (!petOwnerPort.existPetOwner(order.getOrderId())) {
-            throw new Exception("No existe un dueño con el ID especificado.");
+        if (!petOwnerPort.existPetOwner(order.getOwnerId())) {
+            throw new Exception("No existe un dueño con la cedula especificada.");
         }
     
         // Verificar si el usuario asociado existe

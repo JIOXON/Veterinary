@@ -35,8 +35,8 @@ public class OrderAdapter implements OrderPort{
 		//Recupera entidades
 		PetEntity petEntity = petRepository.findById(order.getPetId())
 	            .orElseThrow(() -> new RuntimeException("No existe una mascota con el ID especificado."));
-		PetOwnerEntity petOwnerEntity = petOwnerRepository.findById(order.getOwnerId())
-	            .orElseThrow(() -> new RuntimeException("No existe un dueño con el ID especificado."));
+		PetOwnerEntity petOwnerEntity = petOwnerRepository.findByPersonDocument(order.getOwnerId())
+	            .orElseThrow(() -> new RuntimeException("No existe una cedula con ese numero."));
 	    UserEntity userEntity = userRepository.findById(order.getUserId())
 	            .orElseThrow(() -> new RuntimeException("No existe un usuario con el ID especificado."));
 
@@ -70,7 +70,8 @@ public class OrderAdapter implements OrderPort{
     }
 
 	public List<Order> findAllOrders() {
-        throw new UnsupportedOperationException();
+        List<OrderEntity> ordersEntities = orderRepository.findAll();
+        List<Order> orders = ordersEntities.stream();
     }
 
 	@Override

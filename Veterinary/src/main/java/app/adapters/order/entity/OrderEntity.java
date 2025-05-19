@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 @Table (name = "orders")
 public class OrderEntity {
 	public OrderEntity(Order order, PetEntity petEntity, PetOwnerEntity petOwnerEntity, UserEntity userEntity) {
-		this.orderId = order.getOrderId();
+		//this.orderId = order.getOrderId();
 		this.ownerId = petOwnerEntity;
 		this.petId = petEntity;
 		this.userId = userEntity;
