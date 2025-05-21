@@ -86,22 +86,28 @@ public class SellerInput implements InputPort {
         System.out.println("Ingrese el ID de la orden:");
         int orderId = Integer.parseInt(Utils.getReader().nextLine());
 
-        System.out.println("Ingrese el nombre del medicamento:");
-        String medicineName = Utils.getReader().nextLine();
+        if (!orderPort.existOrder(orderId)) {
+            throw new Exception("La orden médica con ID " + orderId + " no existe.");
+        }
 
-        System.out.println("Ingrese el precio del medicamento:");
-        double price = Double.parseDouble(Utils.getReader().nextLine());
+        Order order = orderPort.findByOrderId(orderId);
+        if (!"Vigente".equalsIgnoreCase(order.getStatus())) {
+            throw new Exception("La orden médica no está vigente. Estado actual: " + order.getStatus());
+        }
+
+        Product medicine = order.getProduct();
+        System.out.println("Medicamento recetado: " + medicine.getProductName());
+        System.out.println("Precio unitario: $" + medicine.getPrice());
 
         System.out.println("Ingrese la cantidad de medicamentos a vender:");
         int quantity = Integer.parseInt(Utils.getReader().nextLine());
 
-        Product medicine = new Product();
-        medicine.setProductName(medicineName);
-        medicine.setPrice(price);
 
         sellerService.sellMedicine(orderId, medicine, quantity);
         System.out.println("Medicamento vendido exitosamente. Factura generada.");
     }
+
+
     
     public List<Order> getAllOrders() {
         return orderPort.findAllOrders();

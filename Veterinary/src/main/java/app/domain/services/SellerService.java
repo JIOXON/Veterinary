@@ -37,27 +37,30 @@ public class SellerService {
 
     // Vender medicamento, corroborar si tiene orden y generar factura
     public void sellMedicine(int orderId, Product medicine, int quantity) throws Exception {
-        
-    	if (!orderPort.existOrder(orderId)) {
-            throw new Exception("No existe ninguna orden");
+        if (!orderPort.existOrder(orderId)) {
+            throw new Exception("No existe ninguna orden con el ID proporcionado.");
+        }
+
+        Order order = orderPort.findByOrderId(orderId);
+
+
+        if (!"Vigente".equalsIgnoreCase(order.getStatus())) {
+            throw new Exception("La orden no está vigente. Estado actual: " + order.getStatus());
         }
 
         productPort.sellProduct(medicine);
-        Order order = orderPort.findByOrderId(orderId);
 
-        // Registrar la venta en la historia clínica
+
         ClinicalHistory history = new ClinicalHistory();
         String productName = (medicine.getProductName() != null && !medicine.getProductName().isEmpty())
                 ? medicine.getProductName()
                 : "Medicamento sin nombre especificado";
         history.setDetails("Medicamento vendido: " + productName);
-        
-
-        // Multiplicar el precio por la cantidad
-        double totalCost = medicine.getPrice() * quantity;
         clinicalHistoryPort.saveClinicalHistory(history);
-        
-        // Crear la factura al vender un medicamento
+
+        double totalCost = medicine.getPrice() * quantity;
+
+
         generateInvoice(order, medicine, quantity, totalCost);
     }
 
