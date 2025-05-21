@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import app.adapters.inputs.utils.ownerValidator;
 import app.adapters.inputs.utils.PetValidator;
 import app.adapters.inputs.utils.SimpleValidator;
@@ -16,7 +15,6 @@ import app.domain.models.Pet;
 import app.domain.models.PetOwner;
 import app.domain.services.VeterinarianService;
 import app.ports.InputPort;
-import app.ports.OrderPort;
 
 @Component
 public class VeterinarianInput implements InputPort{
@@ -30,16 +28,13 @@ public class VeterinarianInput implements InputPort{
 	@Autowired
     private ownerValidator ownerValidator;
 	
-	@Autowired
-    private OrderPort orderPort;
-	
 	private final String MENU = "Ingrese la opción:"
-	        + " \n 1. Registrar orden"
-			+ " \n 2. Registrar Dueño y Mascota"
+	        + " \n 1. Registrar dueño y su mascota"
+			+ " \n 2. Registrar una orden"
 	        + " \n 3. Cancelar una orden"
-	        + " \n 4. Consultar ordenes"
-	        + " \n 5. Registrar historia clinica de mascota"
-	        + " \n 6. Consultar historia clinica";
+			+ " \n 4. Consultar Ordenes"
+	        + " \n 5. Registrar historia clinica"
+	        + " \n 6. Cosultar historia clinica";
 	
 	public void menu() {
 		boolean running = true;
@@ -52,7 +47,7 @@ public class VeterinarianInput implements InputPort{
 			switch (option) {
             	case "1": {
             		try {
-            			registerOrder();
+            			registerPet();
             		} catch (Exception e) {
             			System.out.println("Error: " + e.getMessage());
             		}
@@ -60,7 +55,7 @@ public class VeterinarianInput implements InputPort{
             	}
             	case "2": {
             		try {
-            			registerPet();
+            			registerOrder();
             		} catch (Exception e) {
             			System.out.println("Error: " + e.getMessage());
             		}
@@ -142,7 +137,7 @@ public class VeterinarianInput implements InputPort{
         System.out.println("Ingrese el ID de la mascota a cancelar:");
         long petId = Long.parseLong(Utils.getReader().nextLine());
         
-        System.out.println("Ingrese el ID de la rason de cancelar:");
+        System.out.println("Ingrese la razon de cancelar:");
         String reason = Utils.getReader().nextLine();
     
         veterinarianService.cancelOrder(orderId, petId,reason);
@@ -157,7 +152,10 @@ public class VeterinarianInput implements InputPort{
             List<ClinicalHistory> history = veterinarianService.getClinicalHistory(petId);
             System.out.println("Historia clínica de la mascota:");
             for (ClinicalHistory record : history) {
-                System.out.println("Fecha: " + record + ", Descripción: ");
+                System.out.println("ID Historia: " + record.getHistoryId());
+                System.out.println("ID Mascota: " + record.getPetId());
+                System.out.println("Descripción: " + record.getDetails());
+                System.out.println("-----------------------------");
             }
         } catch (Exception error) {
             System.out.println("Error al consultar la historia clínica: " + error.getMessage());
@@ -195,7 +193,16 @@ public class VeterinarianInput implements InputPort{
             } else {
                 System.out.println("Lista de órdenes:");
                 for (Order order : orders) {
-                    System.out.println("ID: " + order.getOrderId() + ", Medicamento: " + order.getMedicine());
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("ID de Orden: " + order.getOrderId());
+                    System.out.println("Medicamento: " + order.getMedicine());
+                    System.out.println("Fecha de Generación: " + order.getOrderGeneration());
+                    System.out.println("Estado: " + order.getStatus());
+                    System.out.println("Motivo de Cancelación: " + order.getCancellationReason());
+                    System.out.println("ID del Dueño: " + order.getOwnerId());
+                    System.out.println("ID de la Mascota: " + order.getPetId());
+                    System.out.println("ID del Veterinario: " + order.getUserId());
+                    System.out.println("--------------------------------------------------");
                 }
             }
         } catch (Exception error) {
@@ -203,6 +210,7 @@ public class VeterinarianInput implements InputPort{
             System.out.println("Error al consultar las órdenes: " + error.getMessage());
         }
     }
+
 
     private void registerPet() {
         try {

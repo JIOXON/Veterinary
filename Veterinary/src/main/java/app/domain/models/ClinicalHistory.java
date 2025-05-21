@@ -31,5 +31,11 @@ public class ClinicalHistory {
 
 	public ClinicalHistory() {
 	}
+	@Override
+    public String toString() {
+        return "ID Historia: " + historyId +
+               ", Mascota ID: " + PetId +
+               ", Descripción: " + details;
+    }
 	
 }

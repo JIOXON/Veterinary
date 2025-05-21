@@ -53,9 +53,14 @@ public class OrderAdapter implements OrderPort{
     }
 
 	@Override
-    public void cancelOrder(long OrderId) {
-		throw new UnsupportedOperationException();
-    }
+	public void cancelOrder(long orderId, String reason) {
+	    OrderEntity entity = orderRepository.findById(orderId)
+	        .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+	    entity.setStatus("Cancelado");  // Cambiamos el estado a "Cancelado"
+	    entity.setCancellationReason(reason);  // Guardamos la razón
+	    orderRepository.save(entity);
+	}
 
 	@Override
     public Order findByOrderId(long orderId) {
@@ -65,18 +70,20 @@ public class OrderAdapter implements OrderPort{
 
 
 	@Override
-    public List<Order> getAllOrders() {
-        throw new UnsupportedOperationException();
-    }
+	public List<Order> getAllOrders() {
+	    List<OrderEntity> orderEntities = orderRepository.findAll();
+	    return orderEntities.stream()
+	            .map(this::convertToDomain)
+	            .collect(java.util.stream.Collectors.toList());
+	}
 
 	public List<Order> findAllOrders() {
-        List<OrderEntity> ordersEntities = orderRepository.findAll();
-        List<Order> orders = ordersEntities.stream();
-    }
-
+	    return getAllOrders();
+	}
+	
 	@Override
 	public boolean existOrder(long orderId) {
-		return orderRepository.existsByOrderId(orderId);
+	    return orderRepository.existsByOrderId(orderId);
 	}
 
 	private Order convertToDomain(OrderEntity orderEntity) {
@@ -84,9 +91,11 @@ public class OrderAdapter implements OrderPort{
 	    order.setOrderId(orderEntity.getOrderId());
 	    order.setMedicine(orderEntity.getMedicine());
 	    order.setOrderGeneration(orderEntity.getOrderGeneration());
-	    order.setUserId(orderEntity.getUserId().getUserId());  // Veterinarian ID
+	    order.setUserId(orderEntity.getUserId().getUserId());  // Veterinario ID
 	    order.setOwnerId(orderEntity.getOwnerId().getOwnerId());
 	    order.setPetId(orderEntity.getPetId().getPetId());
+	    order.setStatus(orderEntity.getStatus()); // NUEVO
+	    order.setCancellationReason(orderEntity.getCancellationReason()); // NUEVO
 	    return order;
 	}
 	

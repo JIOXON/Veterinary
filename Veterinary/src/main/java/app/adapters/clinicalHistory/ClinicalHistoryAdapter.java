@@ -63,6 +63,7 @@ public class ClinicalHistoryAdapter implements ClinicalHistoryPort{
 	}
 
 	
+	
 	//Convertir entidad ClinicalHistoryEntity a modelo ClinicalHistory
 	private ClinicalHistory History(ClinicalHistoryEntity clinicalHistory) {
 	    ClinicalHistory Entity = new ClinicalHistory();
