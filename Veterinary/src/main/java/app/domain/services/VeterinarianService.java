@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import app.adapters.pet.entity.PetEntity;
 import app.domain.models.*;
 import app.ports.*;
@@ -26,11 +25,27 @@ public class VeterinarianService {
 
     @Autowired
     private PetOwnerPort petOwnerPort;
+    
+    @Autowired
+    private UserPort userPort;
 
     public void registerOrder(Order order) throws Exception {
-        if (orderPort.existOrder(order.getOrderId())) {
-            throw new Exception("Ya existe una orden con el ID especificado");
+        // Verificar si la mascota asociada existe
+        if (!petPort.existPetByPetId(order.getPetId())) {
+            throw new Exception("No existe una mascota con el ID especificado.");
         }
+    
+        // Verificar si el dueño asociado existe
+        if (!petOwnerPort.existPetOwner(order.getOwnerId())) {
+            throw new Exception("No existe un dueño con la cedula especificada.");
+        }
+    
+        // Verificar si el usuario asociado existe
+        if (!userPort.existUserId(order.getUserId())) {
+            throw new Exception("No existe un usuario con el ID especificado.");
+        }
+    
+        // Guardar orden en base de datos
         orderPort.saveOrder(order);
     }
 
@@ -52,13 +67,12 @@ public class VeterinarianService {
         clinicalHistory.setDetails("Orden médica anulada. Razón: " + reason);
         clinicalHistoryPort.saveClinicalHistory(clinicalHistory);
     }
+    
     // Consultar la historia clinica de una mascota
-
     public List<ClinicalHistory> getClinicalHistory(long petId) {
         PetEntity entity = new PetEntity();
         entity.setPetId(petId);
         return clinicalHistoryPort.findClinicalHistoryByPetId(entity);
-
     }
 
     // Consultar las ordenes de los medicamentos
@@ -69,25 +83,15 @@ public class VeterinarianService {
         }
         return orders;
     }
-
-    public void saveClinicalHistory(ClinicalHistory clinicalHistory) throws Exception {
-        if (clinicalHistory == null) {
-            throw new Exception("La historia clínica no puede ser nula.");
+    
+    public ClinicalHistory createClinicalHistory(ClinicalHistory history) throws Exception {
+        // Verificar si la mascota asociada existe
+        if (!petPort.existPetByPetId(history.getPetId())) {
+            throw new Exception("No existe una mascota con el ID especificado.");
         }
-
-        // Verificar si la mascota existe en la base de datos
-        Pet pet = petPort.findPetByPetId(clinicalHistory.getPetId());
-        if (pet == null) {
-            throw new Exception("No se encontró la mascota con el ID especificado.");
-        }
-
-        // Verificar si la mascota tiene un dueño asignado
-        if (pet.getOwnerId() == null) {
-            throw new Exception("La mascota no tiene un dueño asignado.");
-        }
-
-        // Guardar la historia clínica
-        clinicalHistoryPort.saveClinicalHistory(clinicalHistory);
+    
+        // Crear la historia clínica
+        return clinicalHistoryPort.createClinicalHistory(history);
     }
 
     public void registerPet(Pet pet) throws Exception {

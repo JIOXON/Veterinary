@@ -25,15 +25,6 @@ public class PetAdapter implements PetPort{
 	private PersonRepository personRepository;
 
     @Override
-    public Pet createPet(Pet pet) {
-    	PersonEntity person = personRepository.findByDocument(pet.getOwnerId());
-		PetOwnerEntity petOwner = petOwnerRepository.findByPerson(person);
-	    PetEntity petEntity = new PetEntity(pet, petOwner);
-        petRepository.save(petEntity);
-        return petAdapter(petEntity);
-    }
-
-    @Override
 	public Pet findPetByPetId(Long PetId) {
     	PetEntity petEntity = petRepository.findById(PetId).orElse(null);
         return petAdapter(petEntity);
@@ -69,6 +60,26 @@ public class PetAdapter implements PetPort{
         pet.setCharacteristics(petEntity.getCharacteristics());
         pet.setWeight(petEntity.getWeight());
         return pet;
+    }
+    
+    @Override
+    public Pet createPet(Pet pet) {
+        PetOwnerEntity petOwnerEntity = petOwnerRepository.findById(pet.getOwnerId())
+            .orElseThrow(() -> new RuntimeException("No existe un dueño con el ID especificado."));
+
+
+        PetEntity petEntity = new PetEntity();
+        petEntity.setPetName(pet.getPetName());
+        petEntity.setOwnerId(petOwnerEntity);
+        petEntity.setPetAge(pet.getPetAge());
+        petEntity.setSpecies(pet.getSpecies());
+        petEntity.setBreed(pet.getBreed());
+        petEntity.setCharacteristics(pet.getCharacteristics());
+        petEntity.setWeight(pet.getWeight());
+
+
+        petEntity = petRepository.save(petEntity);
+        return petAdapter(petEntity);
     }
     
     private PersonEntity personAdapter(Person person) {

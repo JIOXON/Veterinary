@@ -16,6 +16,7 @@ import app.domain.models.Pet;
 import app.domain.models.PetOwner;
 import app.domain.services.VeterinarianService;
 import app.ports.InputPort;
+import app.ports.OrderPort;
 
 @Component
 public class VeterinarianInput implements InputPort{
@@ -29,12 +30,15 @@ public class VeterinarianInput implements InputPort{
 	@Autowired
     private ownerValidator ownerValidator;
 	
+	@Autowired
+    private OrderPort orderPort;
+	
 	private final String MENU = "Ingrese la opción:"
 	        + " \n 1. Registrar orden"
 			+ " \n 2. Registrar Dueño y Mascota"
 	        + " \n 3. Cancelar una orden"
 	        + " \n 4. Consultar ordenes"
-	        + " \n 5. Modificar historia clinica"
+	        + " \n 5. Registrar historia clinica de mascota"
 	        + " \n 6. Consultar historia clinica";
 	
 	public void menu() {
@@ -103,24 +107,28 @@ public class VeterinarianInput implements InputPort{
 	}
 	
 	private void registerOrder() throws Exception {
-	    System.out.println("Ingrese el ID de la orden:");
-	    int orderId = Integer.parseInt(Utils.getReader().nextLine());
-	    
 	    System.out.println("Ingrese el nombre del medicamento:");
 	    String medicine = ownerValidator.nameValidator(Utils.getReader().nextLine());
 	    
 	    System.out.println("Ingrese el ID del veterinario:");
 	    long veterinarianId = Long.parseLong(Utils.getReader().nextLine());
+	    
+	    System.out.println("Ingrese el ID de la mascota:");
+	    long petId = Long.parseLong(Utils.getReader().nextLine());
+	    
+	    System.out.println("Ingrese la cedula del dueño:");
+	    long OwnerId = Long.parseLong(Utils.getReader().nextLine());
 
 	    // Obtener la fecha de generación actual
 	    Date orderGeneration = new Date(System.currentTimeMillis());
 
 	    // Crear y llenar el objeto Order
 	    Order order = new Order();
-	    order.setOrderId(orderId);
 	    order.setMedicine(medicine);
 	    order.setOrderGeneration(orderGeneration);
 	    order.setUserId(veterinarianId); // El ID del veterinario
+	    order.setPetId(petId);
+	    order.setOwnerId(OwnerId);
 
 	    veterinarianService.registerOrder(order);
 	    System.out.println("Orden registrada exitosamente.");
@@ -170,7 +178,7 @@ public class VeterinarianInput implements InputPort{
             clinicalHistory.setDetails(details);
 
             // Guardar la historia clínica en el servicio
-            veterinarianService.saveClinicalHistory(clinicalHistory);
+            veterinarianService.createClinicalHistory(clinicalHistory);
 
             System.out.println("Historia clínica registrada exitosamente.");
         } catch (Exception error) {
