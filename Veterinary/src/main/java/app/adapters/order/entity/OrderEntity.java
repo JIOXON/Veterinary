@@ -26,6 +26,7 @@ public class OrderEntity {
 		this.medicine = order.getMedicine();
 		this.orderGeneration = order.getOrderGeneration();
 	}
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -48,6 +49,30 @@ public class OrderEntity {
 
 	@Column(name = "order_generation")
     private Date orderGeneration;
+	
+	@Column(name = "status", nullable = false)
+	private String status = "Vigente"; // Valor por defecto
+
+
+	@Column(name = "cancellation_reason")
+	private String cancellationReason;
+
+	public String getStatus() {
+	    return status;
+	}
+
+	public void setStatus(String status) {
+	    this.status = status;
+	}
+
+	public String getCancellationReason() {
+	    return cancellationReason;
+	}
+
+	public void setCancellationReason(String cancellationReason) {
+	    this.cancellationReason = cancellationReason;
+	}
+	
 	
 	public long getOrderId() {
 		return orderId;

@@ -53,7 +53,7 @@ public class VeterinarianService {
         if (!orderPort.existOrder(OrderId)) {
             throw new Exception("No existe una orden con el ID especificado");
         }
-        orderPort.cancelOrder(OrderId);
+        orderPort.cancelOrder(OrderId, reason);
 
         Pet pet = petPort.findPetByPetId(PetId);
 
@@ -64,7 +64,7 @@ public class VeterinarianService {
         // Registrar la anulación en la historia clínica
         ClinicalHistory clinicalHistory = new ClinicalHistory();
         clinicalHistory.setPetId(PetId);
-        clinicalHistory.setDetails("Orden médica anulada. Razón: " + reason);
+        clinicalHistory.setDetails("Orden anulada. Razón: " + reason);
         clinicalHistoryPort.saveClinicalHistory(clinicalHistory);
     }
     

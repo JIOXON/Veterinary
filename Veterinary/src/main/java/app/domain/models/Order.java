@@ -9,6 +9,26 @@ public class Order{
     private long userId;
 	private String medicine;
 	private Date orderGeneration;
+	private String status;
+	private String cancellationReason;
+	
+	 
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getCancellationReason() {
+		return cancellationReason;
+	}
+
+	public void setCancellationReason(String cancellationReason) {
+		this.cancellationReason = cancellationReason;
+	}
 
 	public long getOrderId() {
 		return orderId;
