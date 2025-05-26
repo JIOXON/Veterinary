@@ -32,25 +32,26 @@ public class OrderAdapter implements OrderPort{
 	
 	@Override
 	public void saveOrder(Order order) {
-		//Recupera entidades
-		PetEntity petEntity = petRepository.findById(order.getPetId())
+	    // Recuperar mascota por ID
+	    PetEntity petEntity = petRepository.findById(order.getPetId())
 	            .orElseThrow(() -> new RuntimeException("No existe una mascota con el ID especificado."));
-		PetOwnerEntity petOwnerEntity = petOwnerRepository.findByPersonDocument(order.getOwnerId())
-	            .orElseThrow(() -> new RuntimeException("No existe una cedula con ese numero."));
+
+	    // Primero buscar el dueño por cédula
+	    PetOwnerEntity ownerByDocument = petOwnerRepository.findByPersonDocument(order.getOwnerId())
+	            .orElseThrow(() -> new RuntimeException("No existe una cédula con ese número."));
+
+	    // Luego obtenerlo nuevamente por su ID real (para que Hibernate lo entienda correctamente)
+	    PetOwnerEntity petOwnerEntity = petOwnerRepository.findById(ownerByDocument.getOwnerId())
+	            .orElseThrow(() -> new RuntimeException("No se encontró el dueño por ID interno."));
+
+	    // Obtener usuario (veterinario)
 	    UserEntity userEntity = userRepository.findById(order.getUserId())
 	            .orElseThrow(() -> new RuntimeException("No existe un usuario con el ID especificado."));
 
-	    // Crear la entidad OrderEntity
+	    // Crear entidad y guardar
 	    OrderEntity orderEntity = new OrderEntity(order, petEntity, petOwnerEntity, userEntity);
-
-	    // Guardar la orden en la base de datos
-	    orderRepository.save(orderEntity); 
+	    orderRepository.save(orderEntity);
 	}
-	public Order createOrder(Order order) {
-        OrderEntity orderEntity = new OrderEntity();
-        orderRepository.save(orderEntity);
-        return adapter(orderEntity);
-    }
 
 	@Override
 	public void cancelOrder(long orderId, String reason) {

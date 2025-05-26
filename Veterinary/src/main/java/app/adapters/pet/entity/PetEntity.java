@@ -24,7 +24,7 @@ public class PetEntity {
     private long petId;
     
     @JoinColumn(name = "owner_id")
-    @OneToOne
+    @ManyToOne
     private PetOwnerEntity ownerId;
     
     @Column(name = "pet_age")

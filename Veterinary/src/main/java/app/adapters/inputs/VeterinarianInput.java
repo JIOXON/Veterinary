@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import app.adapters.inputs.utils.ownerValidator;
-import app.adapters.inputs.utils.PetValidator;
-import app.adapters.inputs.utils.SimpleValidator;
-import app.adapters.inputs.utils.Utils;
+
+import app.adapters.rest.utils.PetValidator;
+import app.adapters.rest.utils.SimpleValidator;
+import app.adapters.rest.utils.Utils;
+import app.adapters.rest.utils.ownerValidator;
 import app.domain.models.ClinicalHistory;
 import app.domain.models.Order;
 import app.domain.models.Pet;
@@ -34,7 +35,8 @@ public class VeterinarianInput implements InputPort{
 	        + " \n 3. Cancelar una orden"
 			+ " \n 4. Consultar Ordenes"
 	        + " \n 5. Registrar historia clinica"
-	        + " \n 6. Cosultar historia clinica";
+	        + " \n 6. Cosultar historia clinica"
+	        + " \n 7. Cerrar sesión";
 	
 	public void menu() {
 		boolean running = true;
@@ -93,6 +95,11 @@ public class VeterinarianInput implements InputPort{
             		}
             		break;
             	}
+            	case "7": {  // Opción para salir
+	                System.out.println("Saliendo del menú de veterinario...");
+	                running = false;
+	                break;
+	            }
             	default: {
             		System.out.println("Opción no válida");
             		break;
@@ -249,7 +256,7 @@ public class VeterinarianInput implements InputPort{
             petOwner.setDocument(ownerDocument);
 
             // Registramos al dueño en el servicio
-            veterinarianService.registerPetOwner(petOwner);
+            veterinarianService.registerPerson(petOwner);
             
             // Ahora registramos la mascota
             Pet pet = new Pet();

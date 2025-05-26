@@ -21,7 +21,7 @@ import app.domain.services.SellerService;
 import app.ports.OrderPort;
 
 @RestController
-@RequestMapping("/api/seller")
+@RequestMapping("/seller")
 public class SellerController {
 
 	@Autowired
@@ -46,16 +46,31 @@ public class SellerController {
 
 	@PostMapping("/medicines")
 	public ResponseEntity<String> sellMedicine(@RequestBody SellMedicineRequest request) {
-		try {
-			Product medicine = new Product();
-			medicine.setProductName(request.getMedicineName());
-			medicine.setPrice(request.getPrice());
+	    try {
+	        // Buscar la orden por ID
+	        Order order = orderPort.findByOrderId(request.getOrderId());
 
-			sellerService.sellMedicine(request.getOrderId(), medicine, request.getQuantity());
-			return ResponseEntity.ok("Medicamento vendido exitosamente. Factura generada.");
-		} catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	        if (order == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body("La orden con ID " + request.getOrderId() + " no existe.");
+	        }
+
+	        // Validar que la orden esté vigente
+	        if (!"Vigente".equalsIgnoreCase(order.getStatus())) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body("La orden con ID " + request.getOrderId() + " no está vigente. Estado actual: " + order.getStatus());
+	        }
+
+	        Product medicine = new Product();
+	        medicine.setProductName(request.getMedicineName());
+	        medicine.setPrice(request.getPrice());
+
+	        sellerService.sellMedicine(request.getOrderId(), medicine, request.getQuantity());
+
+	        return ResponseEntity.ok("Medicamento vendido exitosamente. Factura generada.");
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 
 	@GetMapping("/orders")
@@ -67,4 +82,5 @@ public class SellerController {
 
 		return ResponseEntity.ok(response);
 	}
+	
 }

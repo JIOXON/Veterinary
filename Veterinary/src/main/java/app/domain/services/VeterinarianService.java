@@ -102,13 +102,20 @@ public class VeterinarianService {
         petPort.savePet(pet);
     }
 
-    public void registerPetOwner(PetOwner petOwner) throws Exception {
+    public void registerPerson(PetOwner petOwner) throws Exception {
         System.out.println("realiza con datos service " + petOwner.toString());
         if (personPort.existPerson(petOwner.getDocument())) {
             throw new Exception("Ya existe una persona con ese Documento");
         }
         personPort.savePerson(petOwner);
         petOwnerPort.savePetOwner(petOwner);
+    }
+    
+    public List<Person> listOwners() {
+        return petOwnerPort.findAllPetOwners()
+            .stream()
+            .map(owner -> (Person) owner)
+            .toList();
     }
 
     public VeterinarianService() {

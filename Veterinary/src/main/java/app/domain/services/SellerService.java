@@ -45,7 +45,8 @@ public class SellerService {
 
 
         if (!"Vigente".equalsIgnoreCase(order.getStatus())) {
-            throw new Exception("La orden no está vigente. Estado actual: " + order.getStatus());
+        	throw new Exception("No se puede vender el medicamento porque la orden está cancelada.");
+
         }
 
         productPort.sellProduct(medicine);

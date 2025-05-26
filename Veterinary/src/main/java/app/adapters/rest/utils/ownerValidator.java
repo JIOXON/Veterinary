@@ -1,10 +1,10 @@
-package app.adapters.inputs.utils;
+package app.adapters.rest.utils;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersonValidator extends SimpleValidator{
-	
+public class ownerValidator extends SimpleValidator{
+
 	public String nameValidator(String value) throws Exception {
 		return stringValidator(value, "nombre de la persona ");
 	}
@@ -13,9 +13,6 @@ public class PersonValidator extends SimpleValidator{
 		return longValidator(value, " numero de documento ");
 	}
 	
-	public String roleValidator(String value)throws Exception {
-		return stringValidator(value, "Que rol cumple ");
-	}
 	public int ageValidator(String value) throws Exception {
 	    return intValidator(value);
 	}

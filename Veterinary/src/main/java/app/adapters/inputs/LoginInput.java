@@ -5,9 +5,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import app.adapters.inputs.utils.PersonValidator;
-import app.adapters.inputs.utils.UserValidator;
-import app.adapters.inputs.utils.Utils;
+import app.adapters.rest.utils.PersonValidator;
+import app.adapters.rest.utils.UserValidator;
+import app.adapters.rest.utils.Utils;
 import app.domain.models.User;
 import app.domain.services.LoginService;
 import app.ports.InputPort;

@@ -1,5 +1,6 @@
 package app.adapters.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,15 @@ public class UserAdapter implements UserPort{
         System.out.println(user.getPassword());
         System.out.println(user.getRole());
         return user;
+    }
+	
+	@Override
+    public List<User> getAll() {
+        List<UserEntity> usersEntity = userRepository.findAll();
+        List<User> users = new ArrayList<User>();
+        for (UserEntity userEntity : usersEntity) {
+            users.add(userAdapter(userEntity));
+        }
+        return users;
     }
 }

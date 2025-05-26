@@ -2,11 +2,13 @@ package app.adapters.inputs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import app.adapters.inputs.utils.Utils;
+
+import app.adapters.rest.utils.Utils;
 import app.domain.models.*;
 import app.domain.services.SellerService;
 import app.ports.InputPort;
 import app.ports.OrderPort;
+import app.ports.ProductPort;
 
 import java.util.List;
 
@@ -18,11 +20,15 @@ public class SellerInput implements InputPort {
     
     @Autowired
     private OrderPort orderPort;
+    
+    @Autowired
+    private ProductPort productPort;
 
     private final String MENU = "Ingrese la opción:"
-            + "\n 1. Vender un producto"
-            + "\n 2. Vender un medicamento"
-            + "\n 3. Consultar ordenes medicas";
+            + " \n 1. Vender un producto"
+            + " \n 2. Vender un medicamento"
+            + " \n 3. Consultar ordenes medicas"
+    		+ " \n 4. Cerrar sesión";
 
     public void menu() throws Exception {
 	    boolean running = true;
@@ -54,6 +60,11 @@ public class SellerInput implements InputPort {
 	                } catch (Exception error) {
 	                    System.out.println(error.getMessage());
 	                }
+	                break;
+	            }
+	            case "4": {  // Opción para salir
+	                System.out.println("Saliendo del menú de vendedor...");
+	                running = false;
 	                break;
 	            }
 	            default: {
@@ -91,24 +102,12 @@ public class SellerInput implements InputPort {
         }
 
         Order order = orderPort.findByOrderId(orderId);
-        if (!"Vigente".equalsIgnoreCase(order.getStatus())) {
-            throw new Exception("La orden médica no está vigente. Estado actual: " + order.getStatus());
-        }
 
-        Product medicine = order.getProduct();
-        System.out.println("Medicamento recetado: " + medicine.getProductName());
-        System.out.println("Precio unitario: $" + medicine.getPrice());
-
-        System.out.println("Ingrese la cantidad de medicamentos a vender:");
-        int quantity = Integer.parseInt(Utils.getReader().nextLine());
-
-
-        sellerService.sellMedicine(orderId, medicine, quantity);
-        System.out.println("Medicamento vendido exitosamente. Factura generada.");
+        // Buscar producto por el nombre del medicamento en la orden
+        String medicineName = order.getMedicine();
+        
     }
 
-
-    
     public List<Order> getAllOrders() {
         return orderPort.findAllOrders();
     }

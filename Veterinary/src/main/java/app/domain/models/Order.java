@@ -7,7 +7,7 @@ public class Order{
 	private long ownerId;
 	private long petId;
     private long userId;
-	private String medicine;
+	private String medicineName;
 	private Date orderGeneration;
 	private String status;
 	private String cancellationReason;
@@ -63,11 +63,11 @@ public class Order{
 	}
 
 	public String getMedicine() {
-		return medicine;
+		return medicineName;
 	}
 
 	public void setMedicine(String medicine) {
-		this.medicine = medicine;
+		this.medicineName = medicine;
 	}
 
 	public Date getOrderGeneration() {

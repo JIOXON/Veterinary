@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -32,12 +33,12 @@ public class InvoiceEntity {
 	@Column (name = "invoice_id")
 	private long invoiceId;
 	
-    @JoinColumn(name = "pet_id")
-    @OneToOne
+	@ManyToOne
+	@JoinColumn(name = "pet_id")
 	private PetEntity petId;
 	
-    @JoinColumn (name = "owner_id")
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "owner_id")
 	private PetOwnerEntity OwnerId;
 	
     @JoinColumn (name = "order_id")

@@ -9,4 +9,5 @@ public interface UserPort {
     public void saveUser(User user);
     public User findByUserName(String userName);
     public List<User> findAllUsers();
+    List<User> getAll();
 }

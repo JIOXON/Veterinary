@@ -3,7 +3,8 @@ package app.adapters.inputs;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import app.adapters.inputs.utils.*;
+
+import app.adapters.rest.utils.*;
 import app.domain.models.*;
 import app.domain.services.AdminService;
 import app.ports.InputPort;
@@ -16,15 +17,13 @@ public class AdminInput implements InputPort{
     private AdminService adminService;
     @Autowired
     private ownerValidator ownerValidator;
-    @Autowired
-    private PetValidator petValidator;
     
 
 	private final String MENU = "Ingrese la opcion:"
             + " \n 1. Crear Usuario."
             + " \n 2. Lista de personas registradas"
             + " \n 3. Lista de Usuarios"
-            + " \n 4. Salir de la aplicacion";
+            + " \n 4. Cerrar Sesión";
 	
 	public void menu() throws Exception {
 	    boolean running = true;

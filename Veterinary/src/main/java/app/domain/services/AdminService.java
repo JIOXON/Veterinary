@@ -2,6 +2,8 @@ package app.domain.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import app.Exceptions.NotFoundException;
 import app.domain.models.Person;
 import app.domain.models.Pet;
 import app.domain.models.PetOwner;
@@ -63,6 +65,14 @@ public class AdminService {
     }
     public List<PetOwner> listOwners() {
         return petOwnerPort.findAllPetOwners();
+    }
+    
+    public List<User> getUsers() throws Exception {
+        List<User> users = userPort.getAll();
+        if(users.isEmpty()) {
+            throw new NotFoundException("No hay usuarios registrados");
+        }
+        return users;
     }
     
     public AdminService(){

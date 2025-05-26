@@ -13,6 +13,7 @@ public class ProductAdapter implements ProductPort{
 	@Autowired
     private ProductRepository productRepository;
 	
+	
 	@Override
 	public void sellProduct(Product product) {
 		ProductEntity productEntity = new ProductEntity(product);
@@ -20,6 +21,8 @@ public class ProductAdapter implements ProductPort{
         product.setProductId(productEntity.getProductId());
 	}
 
+	
+	
 	@Override
 	public Product getProductById(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId).orElse(null);
@@ -35,4 +38,5 @@ public class ProductAdapter implements ProductPort{
         product.setPrice(productEntity.getPrice());
         return product;
     }
+
 }
